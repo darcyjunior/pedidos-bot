@@ -12,7 +12,33 @@ app.get("/", (req, res) => {
 app.post("/webhook", (req, res) => {
   console.log("cheguei no webhook");
 
-  console.log("body", req.body.queryResult);
+  const mensagem = req.body.queryResult.queryText;
+  const intencao = req.body.queryResult.intent.displayName;
+
+  if (
+    req.body.queryResult.parameters &&
+    req.body.queryResult.parameters.nao_vendemos
+  ) {
+    const responder = `Puxa não vendemos: ${req.body.queryResult.parameters.nao_vendemos}`;
+    console.log("responder", responder);
+  }
+
+  console.log("mensagem original: " + mensagem);
+  console.log("intencao: " + intencao);
+
+  const resposta = {
+    fulfillmentText: "Resposta do webhook",
+    fulfillmentMessages: [
+      {
+        text: {
+          text: ["Text response from webhook"],
+        },
+      },
+    ],
+    source: "",
+  };
+
+  res.send(resposta);
 });
 
 const porta = process.env.PORT || 3000;
