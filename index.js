@@ -20,7 +20,7 @@ app.post("/webhook", (req, res) => {
     req.body.queryResult.parameters &&
     req.body.queryResult.parameters.nao_vendemos
   ) {
-    const responder = `Puxa não vendemos: ${req.body.queryResult.parameters.nao_vendemos}`;
+    responder = `Puxa não vendemos: ${req.body.queryResult.parameters.nao_vendemos}`;
     console.log("responder", responder);
   }
 
