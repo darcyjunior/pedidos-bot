@@ -1,5 +1,7 @@
 const express = require("express");
 
+const Model = require("./model/index");
+
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
@@ -10,43 +12,54 @@ app.get("/", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
-  console.log("cheguei no webhook");
-
   const mensagem = req.body.queryResult.queryText;
   const intencao = req.body.queryResult.intent.displayName;
+  let parametros = null;
   let responder = "";
+  let resposta = "";
 
-  if (
-    req.body.queryResult.parameters &&
-    req.body.queryResult.parameters.nao_vendemos
-  ) {
-    responder = `Puxa não vendemos: ${req.body.queryResult.parameters.nao_vendemos}`;
-    console.log("responder", responder);
+  // if (
+  //   req.body.queryResult.parameters &&
+  //   req.body.queryResult.parameters.nao_vendemos
+  // ) {
+  //   responder = `Puxa não vendemos: ${req.body.queryResult.parameters.nao_vendemos}`;
+  //   console.log("responder", responder);
+  // }
+
+  switch (intencao) {
+    case "verCardapio":
+      resposta = Model.verCardapio(mensagem, parametros);
+      break;
+    default:
+      resposta = {
+        tipo: "texto",
+        mensagem: "Sinto muito, não entendi o que você está solicitando.",
+      };
+      break;
   }
 
-  if (intencao === "verCardapio") {
-    responder = `${responder}. Nosso cardápio ainda está em elaboração, mas nós vendemos pizzas e refrigerantes!`;
-  } else if (intencao === "verStatus") {
-    responder =
-      "Seu pedido ainda está sendo preparado, por favor aguarde mais um instante.";
-  }
+  // if (intencao === "verCardapio") {
+  //   responder = `${responder}. Nosso cardápio ainda está em elaboração, mas nós vendemos pizzas e refrigerantes!`;
+  // } else if (intencao === "verStatus") {
+  //   responder =
+  //     "Seu pedido ainda está sendo preparado, por favor aguarde mais um instante.";
+  // }
 
-  console.log("mensagem original: " + mensagem);
-  console.log("intencao: " + intencao);
-
-  const resposta = {
-    fulfillmentText: "Resposta do webhook",
-    fulfillmentMessages: [
-      {
-        text: {
-          text: [responder],
+  if (resposta.tipo == "texto") {
+    responder = {
+      fulfillmentText: "Resposta do webhook",
+      fulfillmentMessages: [
+        {
+          text: {
+            text: [resposta.mensagem],
+          },
         },
-      },
-    ],
-    source: "",
-  };
+      ],
+      source: "",
+    };
+  }
 
-  res.send(resposta);
+  res.send(responder);
 });
 
 const porta = process.env.PORT || 3000;
