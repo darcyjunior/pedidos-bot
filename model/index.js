@@ -1,9 +1,36 @@
-exports.verCardapio = (msg, params) => {
-  let resposta = {
-    tipo: "imagem",
-    url: "http://lorempixel.com/400/200/",
-  };
-  return resposta;
+const axios = require("axios");
+
+exports.verCardapio = async (msg, params) => {
+  let url = "https://sheetdb.io/api/v1/n336497nyc3ky";
+  let cardapio = [];
+  let produto = {};
+  let retorno = {};
+
+  return await axios
+    .get(url)
+    .then((resultado) => {
+      //   console.log(resultado.data[1]);
+      retorno = resultado.data;
+
+      retorno.forEach((element) => {
+        // console.log(element);
+        produto = {
+          titulo: `Cod: ${element.Codigo} - ${element.Nome}`,
+          preco: `R$ ${element.Preco}`,
+          url: element.Imagem,
+        };
+
+        cardapio.push(produto);
+      });
+
+      let resposta = {
+        tipo: "card",
+        cardapio,
+      };
+
+      return resposta;
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.verStatus = (msg, params) => {

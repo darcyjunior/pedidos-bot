@@ -33,6 +33,22 @@ app.post("/webhook", async (req, res) => {
       break;
   }
 
+  let meuCardapio = [];
+  let menuItem = {};
+
+  for (let i = 0; i < resposta.cardapio.length; i++) {
+    menuItem = {
+      card: {
+        title: resposta.cardapio[i].titulo,
+        subtitle: resposta.cardapio[i].preco,
+        imageUri: resposta.cardapio[i].url,
+      },
+    };
+    meuCardapio.push(menuItem);
+  }
+
+  console.log(resposta);
+
   if (resposta.tipo == "texto") {
     responder = {
       fulfillmentText: "Resposta do webhook",
@@ -57,12 +73,18 @@ app.post("/webhook", async (req, res) => {
       ],
       source: "",
     };
+  } else if (resposta.tipo == "card") {
+    responder = {
+      fulfillmentText: "Resposta do webhook",
+      fulfillmentMessages: meuCardapio,
+      source: "",
+    };
   }
 
   res.send(responder);
 });
 
-const porta = process.env.PORT || 3000;
+const porta = process.env.PORT || 8080;
 const hostname = "127.0.0.1";
 
 app.listen(porta, () =>
