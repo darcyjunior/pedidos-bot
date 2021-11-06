@@ -24,7 +24,12 @@ app.post("/webhook", (req, res) => {
     console.log("responder", responder);
   }
 
-  responder = `${responder}. Nosso cardápio ainda está em elaboração, mas nós vendemos pizzas e refrigerantes!`;
+  if (intencao === "verCardapio") {
+    responder = `${responder}. Nosso cardápio ainda está em elaboração, mas nós vendemos pizzas e refrigerantes!`;
+  } else if (intencao === "verStatus") {
+    responder =
+      "Seu pedido ainda está sendo preparado, por favor aguarde mais um instante.";
+  }
 
   console.log("mensagem original: " + mensagem);
   console.log("intencao: " + intencao);
