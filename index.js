@@ -35,4 +35,9 @@ app.post("/pedido", (req, res) => {
   res.json(pedido);
 });
 
-app.listen(3000, () => console.log("Servidor inicializado na porta 3000"));
+const porta = process.env.PORT || 3000;
+const hostname = "127.0.0.1";
+
+app.listen(porta, hostname, () =>
+  console.log(`Servidor inicializado em: http://${hostname}:${porta}`)
+);
