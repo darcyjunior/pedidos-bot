@@ -9,11 +9,9 @@ exports.verCardapio = async (msg, params) => {
   return await axios
     .get(url)
     .then((resultado) => {
-      //   console.log(resultado.data[1]);
       retorno = resultado.data;
 
       retorno.forEach((element) => {
-        // console.log(element);
         produto = {
           titulo: `Cod: ${element.Codigo} - ${element.Nome}`,
           preco: `R$ ${element.Preco}`,
