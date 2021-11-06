@@ -34,7 +34,7 @@ app.post("/webhook", (req, res) => {
     fulfillmentMessages: [
       {
         text: {
-          text: ["Text response from webhook"],
+          text: [responder],
         },
       },
     ],
