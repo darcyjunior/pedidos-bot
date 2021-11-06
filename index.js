@@ -30,6 +30,9 @@ app.post("/webhook", (req, res) => {
     case "verCardapio":
       resposta = Model.verCardapio(mensagem, parametros);
       break;
+    case "verStatus":
+      resposta = Model.verStatus(mensagem, parametros);
+      break;
     default:
       resposta = {
         tipo: "texto",
@@ -52,6 +55,18 @@ app.post("/webhook", (req, res) => {
         {
           text: {
             text: [resposta.mensagem],
+          },
+        },
+      ],
+      source: "",
+    };
+  } else if (resposta.tipo == "imagem") {
+    responder = {
+      fulfillmentText: "Resposta do webhook",
+      fulfillmentMessages: [
+        {
+          image: {
+            imageUri: resposta.url,
           },
         },
       ],
